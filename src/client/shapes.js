@@ -6,12 +6,12 @@ const ROW_OR_COLUMN_SHAPE = PropTypes.shape({
     image: PropTypes.string,
 });
 
-const TAKEN_VALUE_SHAPE = PropTypes.shape({
+export const TAKEN_VALUE_SHAPE = PropTypes.shape({
     columnId: PropTypes.string.isRequired,
     rowId: PropTypes.string.isRequired,
 });
 
-const QUESTION_DATA_SHAPE = PropTypes.shape({
+export const QUESTION_DATA_SHAPE = PropTypes.shape({
     questionTitle: PropTypes.string.isRequired,
     columns: PropTypes.arrayOf(ROW_OR_COLUMN_SHAPE),
     rows: PropTypes.arrayOf(ROW_OR_COLUMN_SHAPE),

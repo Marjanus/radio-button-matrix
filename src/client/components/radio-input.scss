@@ -1,0 +1,12 @@
+input[type="radio"],
+    .radio-button {
+        border-radius: 50%;
+        border: 1px solid #3bb6c5;
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+
+        &.active {
+            background-color: #3bb6c5,
+        }
+    }

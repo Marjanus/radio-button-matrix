@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import uuidv4 from 'uuid/v4';
 
 import QuestionEditorView from 'src/client/components/question-editor-view';
 import QuestionSummaryView from 'src/client/components/question-summary-view';
@@ -20,17 +21,33 @@ class MatrixContainer extends Component {
             loading: false,
         };
 
-        this.fetchData = this.fetchData.bind(this);
+        this.onChangeQuestionTitle = this.onChangeQuestionTitle.bind(this);
         this.onChangeLabel = this.onChangeLabel.bind(this);
         this.onSelectInput = this.onSelectInput.bind(this);
         this.onAddColumnOrRow = this.onAddColumnOrRow.bind(this);
         this.onRemoveColumnOrRow = this.onRemoveColumnOrRow.bind(this);
-        this.onSubmitForm = this.onSubmitForm.bind(this);
         this.onAddFile = this.onAddFile.bind(this);
+        this.onSubmitForm = this.onSubmitForm.bind(this);
+        this.fetchData = this.fetchData.bind(this);
     }
 
     componentDidMount() {
         this.fetchData();
+    }
+
+    onChangeQuestionTitle(event) {
+        const {
+            data,
+        } = this.state;
+
+        const updatedState = {
+            ...data,
+            questionTitle: event.target.value,
+        };
+
+        this.setState({
+            data: updatedState,
+        });
     }
 
     onChangeLabel(event, id, type) {
@@ -38,14 +55,15 @@ class MatrixContainer extends Component {
             data,
         } = this.state;
 
-        // TODO prevent removing label, error on submit?
+        // TODO prevent removing label, error/focus on submit?
         const itemIndex = data[type].findIndex(item => item.id === id);
+        const itemImage = data[type].find(item => item.id === id).image;
 
         const updatedState = {
             ...data,
             [type]: [
                 ...data[type].slice(0, itemIndex),
-                { id, title: event.target.value, image: null },
+                { id, title: event.target.value, image: itemImage },
                 ...data[type].slice(itemIndex + 1),
             ],
         };
@@ -61,13 +79,13 @@ class MatrixContainer extends Component {
             },
         } = this.state;
 
-        const clearedSiblingValues = takenValues
+        const removedSiblingValues = takenValues
             .filter(value => value.rowId !== rowId && value.columnId !== columnId);
 
         const updatedData = {
             ...data,
             takenValues: [
-                ...clearedSiblingValues,
+                ...removedSiblingValues,
                 { rowId, columnId },
             ],
         };
@@ -84,8 +102,7 @@ class MatrixContainer extends Component {
 
         if (data[type].length < MAX_NUMBER_OF_ROWS_OR_COLUMNS) {
             const numberOfItems = data[type].length;
-            // TODO add non dublicate ids
-            const id = `${type.slice(0, 2)}${numberOfItems}`;
+            const id = uuidv4();
             // probably, labels should be unique, however, this was not specified in the task
             const title = `${type.slice(0, 3)}${numberOfItems + 1}`;
 
@@ -120,6 +137,23 @@ class MatrixContainer extends Component {
         }
     }
 
+    onAddFile(image) {
+        const {
+            data,
+        } = this.state;
+
+        // TODO filter out same field images
+        const updatedData = {
+            ...data,
+            selectedImages: [
+                ...data.selectedImages,
+                image,
+            ],
+        };
+
+        this.setState({ data: updatedData });
+    }
+
     onSubmitForm(event) {
         const {
             data,
@@ -130,13 +164,17 @@ class MatrixContainer extends Component {
         const fileData = new FormData();
         const updatedState = { ...data };
 
-        //images = images.filter(image => image.name.match(/\.(png|jpe?g|gif|svg)$/))
+        /* TODO
+        const images = data.selectedImages.filter(
+            image => image.name.match(/\.(png|jpe?g|gif|svg)$/),
+        );
+        */
 
         data.selectedImages.forEach((item) => {
             fileData.append('files', item.file);
             fileData.append('filename', item.name);
 
-            // TODO refactor
+            // TODO change after file upload to BE
             const value = updatedState[item.type].find(someItem => someItem.id === item.name);
             value.image = item.imageName;
         });
@@ -164,26 +202,9 @@ class MatrixContainer extends Component {
             });
     }
 
-    onAddFile(image) {
-        const {
-            data,
-        } = this.state;
-
-        // todo filter out same field images
-        const updatedData = {
-            ...data,
-            selectedImages: [
-                ...data.selectedImages,
-                image,
-            ],
-        };
-
-        this.setState({ data: updatedData });
-    }
-
-
     fetchData() {
         this.setState({ loading: true });
+
         axios.get('http://localhost:4000/')
             .then((data) => {
                 this.setState({
@@ -219,9 +240,10 @@ class MatrixContainer extends Component {
         }
 
         return (
-            <div id="matrix" className={styles['matrix-container']}>
+            <div className={styles['matrix-container']}>
                 <QuestionEditorView
                     data={data}
+                    onChangeQuestionTitle={this.onChangeQuestionTitle}
                     onSelectInput={this.onSelectInput}
                     onChangeLabel={this.onChangeLabel}
                     onAddColumnOrRow={this.onAddColumnOrRow}
