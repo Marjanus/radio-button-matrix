@@ -8,6 +8,8 @@ import {
     MAX_NUMBER_OF_ROWS_OR_COLUMNS,
 } from 'src/client/constants';
 
+import styles from './matrix-container.scss';
+
 class MatrixContainer extends Component {
     constructor(props) {
         super(props);
@@ -217,7 +219,7 @@ class MatrixContainer extends Component {
         }
 
         return (
-            <div>
+            <div id="matrix" className={styles['matrix-container']}>
                 <QuestionEditorView
                     data={data}
                     onSelectInput={this.onSelectInput}

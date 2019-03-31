@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 
 import {
     MAX_NUMBER_OF_ROWS_OR_COLUMNS,
@@ -10,22 +11,7 @@ import QUESTION_DATA_SHAPE from 'src/client/shapes';
 import LabelRemoveWrapper from './label-remove-wrapper';
 import FileUpload from './file-upload';
 
-const columnStyle = {
-    display: 'flex',
-};
-
-const radioStyle = {
-    borderRadius: '50%',
-    border: '1px solid green',
-    width: '20px',
-    height: '20px',
-    marginRight: '10px',
-};
-
-const activeRadioStyle = {
-    ...radioStyle,
-    backgroundColor: 'green',
-};
+import styles from './question-editor-view.scss';
 
 const QuestionEditorView = (props) => {
     const {
@@ -48,18 +34,20 @@ const QuestionEditorView = (props) => {
     );
 
     const renderFileInputs = () => columns.map(column => (
-        <FileUpload key={`file-upload-${column.id}`} onAddFile={onAddFile} name={column.id} />
+        <div className={styles['column']}>
+            <FileUpload key={`file-upload-${column.id}`} onAddFile={onAddFile} name={column.id} />
+        </div>
     ));
 
     const renderColumnLabels = () => columns.map(column => (
-        <LabelRemoveWrapper
-            key={column.id}
-            id={column.id}
-            onRemoveColumnOrRow={onRemoveColumnOrRow}
-            type={LABEL_TYPES.columns}
-            numberOfTypeLabels={columns.length}
-        >
-            { /*
+        <div className={styles['column']} key={column.id}>
+            <LabelRemoveWrapper
+                id={column.id}
+                onRemoveColumnOrRow={onRemoveColumnOrRow}
+                type={LABEL_TYPES.columns}
+                numberOfTypeLabels={columns.length}
+            >
+                { /*
                 {column.image &&
                     <img
                         width="200"
@@ -69,22 +57,28 @@ const QuestionEditorView = (props) => {
                     />
                 }
             */ }
-            <input
-                type="text"
-                value={column.title}
-                onChange={event => onChangeLabel(event, column.id, LABEL_TYPES.columns)}
-            />
-        </LabelRemoveWrapper>
+                <input
+                    type="text"
+                    value={column.title}
+                    onChange={event => onChangeLabel(event, column.id, LABEL_TYPES.columns)}
+                />
+            </LabelRemoveWrapper>
+        </div>
     ));
 
     const renderRadioInput = (rowId, columnId) => {
         const isSelected = isSelectedOption(rowId, columnId);
 
+        const radioClassName = classnames(
+            'radio-button',
+            isSelected && 'selected',
+        );
+
         return (
             <input
                 type="radio"
                 name={`${columnId}-${rowId}`}
-                style={isSelected ? activeRadioStyle : radioStyle}
+                className={radioClassName}
                 checked={isSelected}
                 onChange={() => onSelectInput(rowId, columnId)}
             />
@@ -92,13 +86,13 @@ const QuestionEditorView = (props) => {
     };
 
     const renderColumnData = rowId => columns.map((column => (
-        <div key={column.id + rowId}>{renderRadioInput(rowId, column.id)}</div>
+        <div className={styles['column']} key={column.id + rowId}>{renderRadioInput(rowId, column.id)}</div>
     )));
 
 
     const renderRows = () => (
         rows.map(row => (
-            <div key={row.id} style={columnStyle}>
+            <div key={row.id} className={styles['row']}>
                 <LabelRemoveWrapper
                     id={row.id}
                     onRemoveColumnOrRow={onRemoveColumnOrRow}
@@ -117,13 +111,13 @@ const QuestionEditorView = (props) => {
     );
 
     return (
-        <div>
+        <div className={styles['question-editor-view']}>
             <div>Question Editor View</div>
             { /* TODO make editable */}
             <div>{questionTitle}</div>
-            <div style={columnStyle}>{renderFileInputs()}</div>
+            <div className={styles['column-container']}> {renderFileInputs()}</div>
             <form action="/upload">
-                <div style={columnStyle}>
+                <div className={styles['column-container']}>
                     <div>`empty    `</div>
                     {renderColumnLabels()}
                     {columns.length < MAX_NUMBER_OF_ROWS_OR_COLUMNS

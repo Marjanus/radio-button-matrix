@@ -2,6 +2,8 @@ import React from 'react';
 
 import QUESTION_DATA_SHAPE from 'src/client/shapes';
 
+import styles from './question-summary-view.scss';
+
 const Statistics = ({ data }) => {
     const renderStatisticsRow = (text, dataPart) => `${text}${dataPart}`;
 
@@ -14,8 +16,7 @@ const Statistics = ({ data }) => {
     }
 
     return (
-        <div>
-            <div>-----------------------------------------------</div>
+        <div className={styles['question-summary-view']}>
             <div>Question Summary View</div>
             <div>Summary</div>
             <ul>
