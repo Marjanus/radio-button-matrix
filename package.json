@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack --mode production",
-    "start": "webpack-dev-server --open --mode development --watch"
+    "start": "webpack-dev-server --open --mode development --watch",
+    "server": "node ./src/server/server.js"
   },
   "repository": {
     "type": "git",
@@ -20,9 +21,15 @@
   "dependencies": {
     "@babel/polyfill": "^7.4.0",
     "axios": "^0.18.0",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "file-loader": "^3.0.1",
+    "mongoose": "^5.4.20",
+    "multer": "^1.4.1",
     "prop-types": "^15.7.2",
     "react": "^16.8.4",
-    "react-dom": "^16.8.4"
+    "react-dom": "^16.8.4",
+    "url-loader": "^1.1.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",

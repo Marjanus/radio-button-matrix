@@ -1,6 +1,6 @@
 import React from 'react';
 
-import QUESTION_DATA_SHAPE from 'src/shapes';
+import QUESTION_DATA_SHAPE from 'src/client/shapes';
 
 const Statistics = ({ data }) => {
     const renderStatisticsRow = (text, dataPart) => `${text}${dataPart}`;

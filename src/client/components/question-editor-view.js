@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import {
     MAX_NUMBER_OF_ROWS_OR_COLUMNS,
     LABEL_TYPES,
-} from 'src/constants';
-import QUESTION_DATA_SHAPE from 'src/shapes';
+} from 'src/client/constants';
+import QUESTION_DATA_SHAPE from 'src/client/shapes';
 
 import LabelRemoveWrapper from './label-remove-wrapper';
+import FileUpload from './file-upload';
 
 const columnStyle = {
     display: 'flex',
@@ -38,11 +39,17 @@ const QuestionEditorView = (props) => {
         onChangeLabel,
         onAddColumnOrRow,
         onRemoveColumnOrRow,
+        onAddFile,
+        onSubmitForm,
     } = props;
 
     const isSelectedOption = (rowId, columnId) => (
         takenValues.filter(value => value.rowId === rowId && value.columnId === columnId).length
     );
+
+    const renderFileInputs = () => columns.map(column => (
+        <FileUpload key={`file-upload-${column.id}`} onAddFile={onAddFile} name={column.id} />
+    ));
 
     const renderColumnLabels = () => columns.map(column => (
         <LabelRemoveWrapper
@@ -52,7 +59,18 @@ const QuestionEditorView = (props) => {
             type={LABEL_TYPES.columns}
             numberOfTypeLabels={columns.length}
         >
+            { /*
+                {column.image &&
+                    <img
+                        width="200"
+                        height="200"
+                        src={require(`src/client/public/images/${column.image}`)}
+                        alt="image"
+                    />
+                }
+            */ }
             <input
+                type="text"
                 value={column.title}
                 onChange={event => onChangeLabel(event, column.id, LABEL_TYPES.columns)}
             />
@@ -88,6 +106,7 @@ const QuestionEditorView = (props) => {
                     numberOfTypeLabels={rows.length}
                 >
                     <input
+                        type="text"
                         value={row.title}
                         onChange={event => onChangeLabel(event, row.id, LABEL_TYPES.rows)}
                     />
@@ -100,8 +119,10 @@ const QuestionEditorView = (props) => {
     return (
         <div>
             <div>Question Editor View</div>
+            { /* TODO make editable */}
             <div>{questionTitle}</div>
-            <form>
+            <div style={columnStyle}>{renderFileInputs()}</div>
+            <form action="/upload">
                 <div style={columnStyle}>
                     <div>`empty    `</div>
                     {renderColumnLabels()}
@@ -113,6 +134,7 @@ const QuestionEditorView = (props) => {
                 {rows.length < MAX_NUMBER_OF_ROWS_OR_COLUMNS
                     && <div onClick={() => onAddColumnOrRow(LABEL_TYPES.rows)}>+</div>
                 }
+                <button type="submit" onClick={onSubmitForm}> Submit</button>
             </form>
         </div>
     );
@@ -126,4 +148,6 @@ QuestionEditorView.propTypes = {
     onChangeLabel: PropTypes.func.isRequired,
     onAddColumnOrRow: PropTypes.func.isRequired,
     onRemoveColumnOrRow: PropTypes.func.isRequired,
+    onAddFile: PropTypes.func.isRequired,
+    onSubmitForm: PropTypes.func.isRequired,
 };

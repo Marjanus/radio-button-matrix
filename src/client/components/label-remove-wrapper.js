@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { MIN_NUMBER_OF_ROWS_OR_COLUMNS } from 'src/constants';
+import { MIN_NUMBER_OF_ROWS_OR_COLUMNS } from 'src/client/constants';
 
 const LabelRemoveWrapper = ({ id, onRemoveColumnOrRow, type, numberOfTypeLabels, children }) => (
     <div key={id}>

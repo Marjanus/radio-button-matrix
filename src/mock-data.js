@@ -1,4 +1,4 @@
-export const data = {
+const data = {
     questionTitle: 'Title of the question',
     columns: [
         { id: 'c1', title: 'first column', image: null },
@@ -17,8 +17,9 @@ export const data = {
     takenValues: [
         { columnId: 'c1', rowId: 'r3' },
     ],
+    selectedImages: [],
 };
 
-export default {
+module.exports = {
     data,
 };

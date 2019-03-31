@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import MatrixContainer from 'src/containers/matrix-container';
+import MatrixContainer from 'src/client/containers/matrix-container';
 
 const App = () => (
     <MatrixContainer />
