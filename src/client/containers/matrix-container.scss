@@ -1,6 +1,8 @@
 .matrix-container {
     display: flex;
     width: 1200px;
+    height: auto;
+    min-height: 600px;
     padding-right: 15px;
     padding-left: 15px;
     margin: 20px auto 0 auto;

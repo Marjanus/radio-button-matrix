@@ -4,10 +4,7 @@ import uuidv4 from 'uuid/v4';
 
 import QuestionEditorView from 'src/client/components/question-editor-view';
 import QuestionSummaryView from 'src/client/components/question-summary-view';
-import {
-    MIN_NUMBER_OF_ROWS_OR_COLUMNS,
-    MAX_NUMBER_OF_ROWS_OR_COLUMNS,
-} from 'src/client/constants';
+import { MIN_NUMBER_OF_ROWS_OR_COLUMNS, MAX_NUMBER_OF_ROWS_OR_COLUMNS } from 'src/client/constants';
 
 import styles from './matrix-container.scss';
 
@@ -28,6 +25,7 @@ class MatrixContainer extends Component {
         this.onRemoveColumnOrRow = this.onRemoveColumnOrRow.bind(this);
         this.onAddFile = this.onAddFile.bind(this);
         this.onSubmitForm = this.onSubmitForm.bind(this);
+        this.onResetForm = this.onResetForm.bind(this);
         this.fetchData = this.fetchData.bind(this);
     }
 
@@ -55,7 +53,6 @@ class MatrixContainer extends Component {
             data,
         } = this.state;
 
-        // TODO prevent removing label, error/focus on submit?
         const itemIndex = data[type].findIndex(item => item.id === id);
         const itemImage = data[type].find(item => item.id === id).image;
 
@@ -142,16 +139,34 @@ class MatrixContainer extends Component {
             data,
         } = this.state;
 
-        // TODO filter out same field images
-        const updatedData = {
-            ...data,
-            selectedImages: [
-                ...data.selectedImages,
-                image,
-            ],
-        };
+        const fileData = new FormData();
 
-        this.setState({ data: updatedData });
+        fileData.append('files', image.file);
+        fileData.append('type', image.type);
+        fileData.append('id', image.id);
+        fileData.append('state', JSON.stringify(data));
+
+        this.setState({ loading: true });
+
+        axios.put('http://localhost:4000/upload-image', fileData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        })
+            .then((returnData) => {
+                this.setState({
+                    loading: false,
+                    data: {
+                        ...returnData.data,
+                    },
+                });
+            })
+            .catch((error) => {
+                this.setState({
+                    loading: false,
+                    error,
+                });
+            });
     }
 
     onSubmitForm(event) {
@@ -160,38 +175,43 @@ class MatrixContainer extends Component {
         } = this.state;
 
         event.preventDefault();
-
-        const fileData = new FormData();
-        const updatedState = { ...data };
-
-        /* TODO
-        const images = data.selectedImages.filter(
-            image => image.name.match(/\.(png|jpe?g|gif|svg)$/),
-        );
-        */
-
-        data.selectedImages.forEach((item) => {
-            fileData.append('files', item.file);
-            fileData.append('filename', item.name);
-
-            // TODO change after file upload to BE
-            const value = updatedState[item.type].find(someItem => someItem.id === item.name);
-            value.image = item.imageName;
-        });
-
-        fileData.append('state', JSON.stringify(updatedState));
-
         this.setState({ loading: true });
 
-        axios.post('http://localhost:4000/submit', fileData, {
+        const fileData = new FormData();
+        fileData.append('state', JSON.stringify(data));
+
+        axios.put('http://localhost:4000/submit', fileData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
         })
             .then((returnData) => {
                 this.setState({
-                    data: returnData.data.state,
                     loading: false,
+                    data: {
+                        ...returnData.data,
+                    },
+                });
+            })
+            .catch((error) => {
+                this.setState({
+                    loading: false,
+                    error,
+                });
+            });
+    }
+
+    onResetForm(event) {
+        event.preventDefault();
+        this.setState({ loading: true });
+
+        axios.put('http://localhost:4000/reset')
+            .then((data) => {
+                this.setState({
+                    loading: false,
+                    data: {
+                        ...data.data,
+                    },
                 });
             })
             .catch((error) => {
@@ -209,7 +229,9 @@ class MatrixContainer extends Component {
             .then((data) => {
                 this.setState({
                     loading: false,
-                    data: data.data,
+                    data: {
+                        ...data.data,
+                    },
                 });
             })
             .catch((error) => {
@@ -228,11 +250,11 @@ class MatrixContainer extends Component {
         } = this.state;
 
         if (loading) {
-            return <div>Loading</div>;
+            return <div className={styles['matrix-container']}>Loading</div>;
         }
 
         if (error) {
-            return <div>Error</div>;
+            return <div className={styles['matrix-container']}>Error</div>;
         }
 
         if (!data) {
@@ -250,6 +272,7 @@ class MatrixContainer extends Component {
                     onRemoveColumnOrRow={this.onRemoveColumnOrRow}
                     onAddFile={this.onAddFile}
                     onSubmitForm={this.onSubmitForm}
+                    onResetForm={this.onResetForm}
                 />
                 <QuestionSummaryView data={data} />
             </div>

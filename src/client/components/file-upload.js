@@ -15,13 +15,19 @@ class FileUpload extends Component {
     onChange(event) {
         const {
             onAddFile,
-            name,
+            id,
+            type,
         } = this.props;
 
         const file = event.target.files[0];
 
         this.setState({ selectedFile: event.target.files[0] });
-        onAddFile({ file, name, type: 'columns', imageName: `IMAGE-${file.name}` });
+
+        onAddFile({
+            file,
+            id,
+            type,
+        });
     }
 
     render() {
@@ -30,13 +36,13 @@ class FileUpload extends Component {
         } = this.state;
 
         const {
-            name,
+            disabled,
         } = this.props;
 
         return (
             <div>
                 {selectedFile && <div>Selected</div>}
-                <input type="file" name={name} onChange={this.onChange} />
+                <input type="file" disabled={disabled} onChange={this.onChange} />
             </div>
         );
     }
@@ -44,7 +50,13 @@ class FileUpload extends Component {
 
 FileUpload.propTypes = {
     onAddFile: PropTypes.func.isRequired,
-    name: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
+    disabled: PropTypes.bool,
+};
+
+FileUpload.defaultProps = {
+    disabled: false,
 };
 
 export default FileUpload;

@@ -28,11 +28,25 @@ const QuestionEditorView = (props) => {
         onRemoveColumnOrRow,
         onAddFile,
         onSubmitForm,
+        onResetForm,
     } = props;
+
+    const emptyColumnsLabels = columns.filter(column => !column.title.trim().length);
+    const emptyRowLabels = rows.filter(row => !row.title.trim().length);
+    const disabledSubmit = !questionTitle.trim().length || emptyColumnsLabels.length
+        || emptyRowLabels.length;
 
     const renderColumnLabels = () => columns.map(column => (
         <div className={styles['column']} key={column.id}>
-            <FileUpload key={`file-upload-${column.id}`} onAddFile={onAddFile} name={column.id} />
+
+            <img width="200" height="200" src={column.image} />
+            <FileUpload
+                disabled={!!disabledSubmit}
+                key={`file-upload-${column.id}`}
+                type="columns"
+                id={column.id}
+                onAddFile={onAddFile}
+            />
             <LabelRemoveWrapper
                 id={column.id}
                 onRemoveColumnOrRow={onRemoveColumnOrRow}
@@ -99,7 +113,20 @@ const QuestionEditorView = (props) => {
                 {rows.length < MAX_NUMBER_OF_ROWS_OR_COLUMNS
                     && <div onClick={() => onAddColumnOrRow(LABEL_TYPES.rows)}>+</div>
                 }
-                <button type="submit" onClick={onSubmitForm}> Submit</button>
+                <button
+                    type="button"
+                    disabled={disabledSubmit}
+                    onClick={onResetForm}
+                >
+                    Reset form
+                </button>
+                <button
+                    type="submit"
+                    disabled={disabledSubmit}
+                    onClick={onSubmitForm}
+                >
+                    Submit
+                </button>
             </form>
         </div>
     );
@@ -116,4 +143,5 @@ QuestionEditorView.propTypes = {
     onRemoveColumnOrRow: PropTypes.func.isRequired,
     onAddFile: PropTypes.func.isRequired,
     onSubmitForm: PropTypes.func.isRequired,
+    onResetForm: PropTypes.func.isRequired,
 };
