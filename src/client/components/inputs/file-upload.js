@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
+
+import Button from './button';
+
+import styles from './file-upload.scss';
 
 class FileUpload extends Component {
     constructor(props) {
@@ -39,9 +44,18 @@ class FileUpload extends Component {
             disabled,
         } = this.props;
 
+        const className = classnames(
+            styles['file-upload'],
+            disabled && styles['disabled'],
+        );
+
         return (
-            <div>
-                {selectedFile && <div>Selected</div>}
+            <div className={className}>
+                <Button
+                    disabled={disabled}
+                    onClick={null}
+                    label="upload"
+                />
                 <input type="file" disabled={disabled} onChange={this.onChange} />
             </div>
         );

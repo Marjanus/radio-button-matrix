@@ -7,9 +7,11 @@ import {
 } from 'src/client/constants';
 import QUESTION_DATA_SHAPE from 'src/client/shapes';
 
-import RadioInput from './radio-input';
+import RadioInput from './inputs/radio-input';
 import LabelRemoveWrapper from './label-remove-wrapper';
-import FileUpload from './file-upload';
+import TextInput from './inputs/text-input';
+import FileUpload from './inputs/file-upload';
+import Button from './inputs/button';
 
 import styles from './question-editor-view.scss';
 
@@ -33,28 +35,31 @@ const QuestionEditorView = (props) => {
 
     const emptyColumnsLabels = columns.filter(column => !column.title.trim().length);
     const emptyRowLabels = rows.filter(row => !row.title.trim().length);
-    const disabledSubmit = !questionTitle.trim().length || emptyColumnsLabels.length
-        || emptyRowLabels.length;
+    const disabledSubmit = !questionTitle.trim().length || !!emptyColumnsLabels.length
+        || !!emptyRowLabels.length;
 
     const renderColumnLabels = () => columns.map(column => (
         <div className={styles['column']} key={column.id}>
-
-            <img width="200" height="200" src={column.image} />
-            <FileUpload
-                disabled={!!disabledSubmit}
-                key={`file-upload-${column.id}`}
-                type="columns"
-                id={column.id}
-                onAddFile={onAddFile}
-            />
+            {column.image &&
+                <img width="40" height="40" src={column.image} />
+            }
+            {!column.image && (
+                <FileUpload
+                    disabled={!!disabledSubmit}
+                    key={`file-upload-${column.id}`}
+                    type="columns"
+                    id={column.id}
+                    onAddFile={onAddFile}
+                />
+            )
+            }
             <LabelRemoveWrapper
                 id={column.id}
                 onRemoveColumnOrRow={onRemoveColumnOrRow}
                 type={LABEL_TYPES.columns}
                 numberOfTypeLabels={columns.length}
             >
-                <input
-                    type="text"
+                <TextInput
                     value={column.title}
                     onChange={event => onChangeLabel(event, column.id, LABEL_TYPES.columns)}
                 />
@@ -77,14 +82,26 @@ const QuestionEditorView = (props) => {
     const renderRows = () => (
         rows.map(row => (
             <div key={row.id} className={styles['row']}>
+                {row.image &&
+                    <img width="40" height="40" src={row.image} />
+                }
+                {!row.image && (
+                    <FileUpload
+                        disabled={!!disabledSubmit}
+                        key={`file-upload-${row.id}`}
+                        type="rows"
+                        id={row.id}
+                        onAddFile={onAddFile}
+                    />
+                )
+                }
                 <LabelRemoveWrapper
                     id={row.id}
                     onRemoveColumnOrRow={onRemoveColumnOrRow}
                     type={LABEL_TYPES.rows}
                     numberOfTypeLabels={rows.length}
                 >
-                    <input
-                        type="text"
+                    <TextInput
                         value={row.title}
                         onChange={event => onChangeLabel(event, row.id, LABEL_TYPES.rows)}
                     />
@@ -98,35 +115,40 @@ const QuestionEditorView = (props) => {
         <div className={styles['question-editor-view']}>
             <div>Question Editor View</div>
             <form action="/upload">
-                <input
-                    type="text"
+                <TextInput
                     value={questionTitle}
                     onChange={onChangeQuestionTitle}
                 />
                 <div className={styles['column-container']}>
                     {renderColumnLabels()}
                     {columns.length < MAX_NUMBER_OF_ROWS_OR_COLUMNS
-                        && <div onClick={() => onAddColumnOrRow(LABEL_TYPES.columns)}>+</div>
+                        && (
+                            <Button
+                                onClick={() => onAddColumnOrRow(LABEL_TYPES.columns)}
+                                label="+"
+                                square
+                            />
+                        )
                     }
                 </div>
                 <div>{renderRows()}</div>
                 {rows.length < MAX_NUMBER_OF_ROWS_OR_COLUMNS
-                    && <div onClick={() => onAddColumnOrRow(LABEL_TYPES.rows)}>+</div>
+                    && (
+                        < Button onClick={() => onAddColumnOrRow(LABEL_TYPES.rows)} label="+" square />
+                    )
                 }
-                <button
-                    type="button"
+                <Button
+                    type="reset"
                     disabled={disabledSubmit}
                     onClick={onResetForm}
-                >
-                    Reset form
-                </button>
-                <button
+                    label="Reset form"
+                />
+                <Button
                     type="submit"
                     disabled={disabledSubmit}
                     onClick={onSubmitForm}
-                >
-                    Submit
-                </button>
+                    label="Save form"
+                />
             </form>
         </div>
     );

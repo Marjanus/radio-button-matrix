@@ -1,0 +1,26 @@
+.file-upload {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+
+    input[type=file] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        opacity: 0;
+        max-width: 100%;
+        cursor: pointer;
+    }
+
+    &:hover:not(.disabled) {
+        background-color: rgba(0, 0, 0, 0.08);
+    }
+
+    &.disabled {
+        input[type=file] {
+            cursor: not-allowed;
+        }
+    }
+}

@@ -13,18 +13,16 @@ const RadioInput = ({ rowId, columnId, takenValues, onSelectInput }) => {
 
     const isSelected = isSelectedOption(rowId, columnId);
 
-    const radioClassName = classnames(
-        'radio-button',
-        isSelected && 'selected',
+    const className = classnames(
+        styles['radio-button'],
+        isSelected && styles['selected'],
     );
 
     return (
-        <input
-            type="radio"
+        <div
             name={`${columnId}-${rowId}`}
-            className={styles[radioClassName]}
-            checked={isSelected}
-            onChange={() => onSelectInput(rowId, columnId)}
+            className={className}
+            onClick={() => onSelectInput(rowId, columnId)}
         />
     );
 };
