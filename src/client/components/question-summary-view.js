@@ -15,6 +15,11 @@ const QuestionSummaryView = ({ data }) => {
         return Math.max(...labelsLengths);
     };
 
+    const getShortestLabel = (type) => {
+        const labelsLengths = data[type].map(item => item.title.length);
+        return Math.min(...labelsLengths);
+    };
+
     return (
         <div className={styles['question-summary-view']}>
             <h2>Question Summary View</h2>
@@ -34,7 +39,13 @@ const QuestionSummaryView = ({ data }) => {
                         {renderStatisticsRow('Longest row label: ', getLongestLabel('rows'))}
                     </li>
                     <li>
-                        {renderStatisticsRow('Longest column label: ', getLongestLabel('columns'))}
+                        {renderStatisticsRow('Shortest row label: ', getLongestLabel('rows'))}
+                    </li>
+                    <li>
+                        {renderStatisticsRow('Longest column label: ', getShortestLabel('columns'))}
+                    </li>
+                    <li>
+                        {renderStatisticsRow('Shortest column label: ', getShortestLabel('rows'))}
                     </li>
                 </ul>
             </div>
