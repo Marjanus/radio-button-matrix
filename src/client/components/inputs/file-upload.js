@@ -10,10 +10,6 @@ class FileUpload extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            selectedFile: null,
-        };
-
         this.onChange = this.onChange.bind(this);
     }
 
@@ -26,20 +22,10 @@ class FileUpload extends Component {
 
         const file = event.target.files[0];
 
-        this.setState({ selectedFile: event.target.files[0] });
-
-        onAddFile({
-            file,
-            id,
-            type,
-        });
+        onAddFile({ file, id, type });
     }
 
     render() {
-        const {
-            selectedFile,
-        } = this.state;
-
         const {
             disabled,
         } = this.props;

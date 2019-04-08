@@ -1,9 +1,16 @@
 .label-remove-wrapper {
+    min-height: 38px;
+
     .icon {
         float: right;
         width: 16px;
-        cursor: pointer;
         color: #e10050;
+        cursor: pointer;
         transform: rotate(45deg);
+    }
+
+    &.without-icon {
+        display: flex;
+        align-items: flex-end;
     }
 }

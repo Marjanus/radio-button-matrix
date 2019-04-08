@@ -20,7 +20,7 @@ class MatrixContainer extends Component {
 
         this.onChangeQuestionTitle = this.onChangeQuestionTitle.bind(this);
         this.onChangeLabel = this.onChangeLabel.bind(this);
-        this.onSelectInput = this.onSelectInput.bind(this);
+        this.onSelectRadioInput = this.onSelectRadioInput.bind(this);
         this.onAddColumnOrRow = this.onAddColumnOrRow.bind(this);
         this.onRemoveColumnOrRow = this.onRemoveColumnOrRow.bind(this);
         this.onAddFile = this.onAddFile.bind(this);
@@ -54,7 +54,7 @@ class MatrixContainer extends Component {
         } = this.state;
 
         const itemIndex = data[type].findIndex(item => item.id === id);
-        const itemImage = data[type].find(item => item.id === id).image;
+        const itemImage = data[type][itemIndex].image;
 
         const updatedState = {
             ...data,
@@ -68,7 +68,7 @@ class MatrixContainer extends Component {
         this.setState({ data: updatedState });
     }
 
-    onSelectInput(rowId, columnId) {
+    onSelectRadioInput(rowId, columnId) {
         const {
             data,
             data: {
@@ -161,17 +161,19 @@ class MatrixContainer extends Component {
                 'Content-Type': 'multipart/form-data',
             },
         })
-            .then((returnData) => {
+            .then((returnedData) => {
                 this.setState({
                     loading: false,
                     data: {
-                        ...returnData.data,
+                        ...returnedData.data,
                     },
+                    error: null,
                 });
             })
             .catch((error) => {
                 this.setState({
                     loading: false,
+                    data: null,
                     error,
                 });
             });
@@ -193,17 +195,19 @@ class MatrixContainer extends Component {
                 'Content-Type': 'multipart/form-data',
             },
         })
-            .then((returnData) => {
+            .then((returnedData) => {
                 this.setState({
                     loading: false,
                     data: {
-                        ...returnData.data,
+                        ...returnedData.data,
                     },
+                    error: null,
                 });
             })
             .catch((error) => {
                 this.setState({
                     loading: false,
+                    data: null,
                     error,
                 });
             });
@@ -220,11 +224,13 @@ class MatrixContainer extends Component {
                     data: {
                         ...data.data,
                     },
+                    error: null,
                 });
             })
             .catch((error) => {
                 this.setState({
                     loading: false,
+                    data: null,
                     error,
                 });
             });
@@ -240,11 +246,13 @@ class MatrixContainer extends Component {
                     data: {
                         ...data.data,
                     },
+                    error: null,
                 });
             })
             .catch((error) => {
                 this.setState({
                     loading: false,
+                    data: null,
                     error,
                 });
             });
@@ -274,7 +282,7 @@ class MatrixContainer extends Component {
                 <QuestionEditorView
                     data={data}
                     onChangeQuestionTitle={this.onChangeQuestionTitle}
-                    onSelectInput={this.onSelectInput}
+                    onSelectRadioInput={this.onSelectRadioInput}
                     onChangeLabel={this.onChangeLabel}
                     onAddColumnOrRow={this.onAddColumnOrRow}
                     onRemoveColumnOrRow={this.onRemoveColumnOrRow}
@@ -282,7 +290,9 @@ class MatrixContainer extends Component {
                     onSubmitForm={this.onSubmitForm}
                     onResetForm={this.onResetForm}
                 />
-                <QuestionSummaryView data={data} />
+                <QuestionSummaryView
+                    data={data}
+                />
             </div>
         );
     }

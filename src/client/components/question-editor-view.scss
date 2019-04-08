@@ -21,13 +21,9 @@ $row-header-block-width: 180px;
                 width: calc(12.5% - 8px);
                 padding: 0 8px;
 
-                .column-image-container {
-                    text-align: center;
+                &:last-of-type {
+                    padding-right: 16px;
                 }
-            }
-
-            .add-more-button {
-                margin-left: 8px;
             }
         }
     
@@ -35,14 +31,9 @@ $row-header-block-width: 180px;
             padding: 8px 0;
             display: flex;
 
-            .row-image-container {
-                width: 88px;
-                padding-right: 8px;
-                text-align: center;
-            }
-
             .row-label {
                 width: 88px;
+                margin-left: 8px;
             }
 
             .radio-input-wrapper {

@@ -6,7 +6,8 @@
   "scripts": {
     "build": "webpack --mode production",
     "start": "webpack-dev-server --open --mode development --watch",
-    "server": "node ./src/server/server.js"
+    "server": "node ./src/server/server.js",
+    "lint": "./node_modules/.bin/eslint src"
   },
   "repository": {
     "type": "git",

@@ -33,7 +33,7 @@ const saveUpdatedForm = state => (
 
 /*
     Presumebly this app is a single form edit page, form ID should dynamicaly come from URL,
-    however, for a DEMO without routing, ID is currently hardcoded
+    however, for a DEMO without routing, ID currently is hardcoded
 */
 
 router.get('/', (req, res) => {

@@ -4,14 +4,14 @@ import QUESTION_DATA_SHAPE from 'src/client/shapes';
 
 import styles from './question-summary-view.scss';
 
-const Statistics = ({ data }) => {
+const QuestionSummaryView = ({ data }) => {
     const renderStatisticsRow = (text, number) => `${text}${number}`;
 
     const numberOfImagesUploaded = data.rows.filter(row => row.image).length
         + data.columns.filter(column => column.image).length;
 
     const getLongestLabel = (type) => {
-        const labelsLengths = data[type].map(item => item.title.trim().length);
+        const labelsLengths = data[type].map(item => item.title.length);
         return Math.max(...labelsLengths);
     };
 
@@ -40,10 +40,10 @@ const Statistics = ({ data }) => {
             </div>
         </div>
     );
-}
+};
 
-Statistics.propTypes = {
+QuestionSummaryView.propTypes = {
     data: QUESTION_DATA_SHAPE.isRequired,
 };
 
-export default Statistics;
+export default QuestionSummaryView;

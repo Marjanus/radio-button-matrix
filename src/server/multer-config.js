@@ -1,6 +1,6 @@
 const multer = require('multer');
 
-const SUPPORTED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/svg+xml'];
+const SUPPORTED_MIME_TYPES = ['image/jpeg', 'image/png'];
 
 const storage = multer.diskStorage({
     destination: './uploads',

@@ -6,23 +6,21 @@ import { TAKEN_VALUE_SHAPE } from 'src/client/shapes';
 
 import styles from './radio-input.scss';
 
-const RadioInput = ({ rowId, columnId, takenValues, onSelectInput }) => {
+const RadioInput = ({ rowId, columnId, takenValues, onSelectRadioInput }) => {
     const isSelectedOption = () => (
         takenValues.find(value => value.rowId === rowId && value.columnId === columnId)
     );
 
-    const isSelected = isSelectedOption(rowId, columnId);
-
     const className = classnames(
         styles['radio-button'],
-        isSelected && styles['selected'],
+        isSelectedOption(rowId, columnId) && styles['selected'],
     );
 
     return (
         <div
             name={`${columnId}-${rowId}`}
             className={className}
-            onClick={() => onSelectInput(rowId, columnId)}
+            onClick={() => onSelectRadioInput(rowId, columnId)}
         />
     );
 };
@@ -31,7 +29,7 @@ RadioInput.propTypes = {
     rowId: PropTypes.string.isRequired,
     columnId: PropTypes.string.isRequired,
     takenValues: PropTypes.arrayOf(TAKEN_VALUE_SHAPE),
-    onSelectInput: PropTypes.func.isRequired,
+    onSelectRadioInput: PropTypes.func.isRequired,
 };
 
 RadioInput.defaultProps = {
