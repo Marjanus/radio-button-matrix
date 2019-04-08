@@ -1,4 +1,17 @@
 .question-summary-view {
-    width: 25%;
-    padding: 30px 15px;
+    width: 20%;
+    padding: 24px 16px;
+
+    .content {
+        padding-top: 8px;
+
+        .list {
+            padding-left: 24px;
+            list-style-type: none;
+
+            li {
+                padding: 8px 0;
+            }
+        }
+    }
 }

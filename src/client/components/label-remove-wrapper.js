@@ -3,10 +3,12 @@ import PropTypes from 'prop-types';
 
 import { MIN_NUMBER_OF_ROWS_OR_COLUMNS } from 'src/client/constants';
 
+import styles from './label-remove-wrapper.scss';
+
 const LabelRemoveWrapper = ({ id, onRemoveColumnOrRow, type, numberOfTypeLabels, children }) => (
-    <div key={id}>
+    <div key={id} className={styles['label-remove-wrapper']}>
         {numberOfTypeLabels > MIN_NUMBER_OF_ROWS_OR_COLUMNS
-            && <div onClick={() => { onRemoveColumnOrRow(type, id); }}>-</div>
+            && <div className={styles['icon']} onClick={() => { onRemoveColumnOrRow(type, id); }}>+</div>
         }
         {children}
     </div>

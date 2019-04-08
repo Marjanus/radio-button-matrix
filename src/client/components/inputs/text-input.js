@@ -17,6 +17,7 @@ const TextInput = ({ value, onChange }) => {
             type="text"
             value={value}
             onChange={onChange}
+            maxLength="48"
         />
     );
 };

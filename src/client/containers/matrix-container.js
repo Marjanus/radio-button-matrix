@@ -121,12 +121,20 @@ class MatrixContainer extends Component {
         } = this.state;
 
         if (data[type].length > MIN_NUMBER_OF_ROWS_OR_COLUMNS) {
-            const filteredValues = data[type].filter(item => item.id !== id);
+            const filteredColumnsOrRows = data[type].filter(item => item.id !== id);
+            const takenValueIdKey = `${type.slice(0, -1)}Id`;
+
+            const filteredTakenValues = data.takenValues.filter(
+                item => item[takenValueIdKey] !== id,
+            );
 
             const updatedState = {
                 ...data,
                 [type]: [
-                    ...filteredValues,
+                    ...filteredColumnsOrRows,
+                ],
+                takenValues: [
+                    ...filteredTakenValues,
                 ],
             };
 

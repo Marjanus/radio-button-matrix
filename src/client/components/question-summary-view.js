@@ -17,25 +17,27 @@ const Statistics = ({ data }) => {
 
     return (
         <div className={styles['question-summary-view']}>
-            <div>Question Summary View</div>
-            <div>Summary</div>
-            <ul>
-                <li>
-                    {renderStatisticsRow('Number of rows: ', data.rows.length)}
-                </li>
-                <li>
-                    {renderStatisticsRow('Number of colums: ', data.columns.length)}
-                </li>
-                <li>
-                    {renderStatisticsRow('Number of images uploaded: ', numberOfImagesUploaded)}
-                </li>
-                <li>
-                    {renderStatisticsRow('Longest row label: ', getLongestLabel('rows'))}
-                </li>
-                <li>
-                    {renderStatisticsRow('Longest column label: ', getLongestLabel('columns'))}
-                </li>
-            </ul>
+            <h2>Question Summary View</h2>
+            <div className={styles['content']}>
+                <h4>Summary</h4>
+                <ul className={styles['list']}>
+                    <li>
+                        {renderStatisticsRow('Number of rows: ', data.rows.length)}
+                    </li>
+                    <li>
+                        {renderStatisticsRow('Number of colums: ', data.columns.length)}
+                    </li>
+                    <li>
+                        {renderStatisticsRow('Number of images uploaded: ', numberOfImagesUploaded)}
+                    </li>
+                    <li>
+                        {renderStatisticsRow('Longest row label: ', getLongestLabel('rows'))}
+                    </li>
+                    <li>
+                        {renderStatisticsRow('Longest column label: ', getLongestLabel('columns'))}
+                    </li>
+                </ul>
+            </div>
         </div>
     );
 }

@@ -40,19 +40,21 @@ const QuestionEditorView = (props) => {
 
     const renderColumnLabels = () => columns.map(column => (
         <div className={styles['column']} key={column.id}>
-            {column.image &&
-                <img width="40" height="40" src={column.image} />
-            }
-            {!column.image && (
-                <FileUpload
-                    disabled={!!disabledSubmit}
-                    key={`file-upload-${column.id}`}
-                    type="columns"
-                    id={column.id}
-                    onAddFile={onAddFile}
-                />
-            )
-            }
+            <div className={styles['column-image-container']}>
+                {column.image
+                    && <img width="38" height="38" src={column.image} />
+                }
+                {!column.image && (
+                    <FileUpload
+                        disabled={!!disabledSubmit}
+                        key={`file-upload-${column.id}`}
+                        type="columns"
+                        id={column.id}
+                        onAddFile={onAddFile}
+                    />
+                )
+                }
+            </div>
             <LabelRemoveWrapper
                 id={column.id}
                 onRemoveColumnOrRow={onRemoveColumnOrRow}
@@ -68,7 +70,7 @@ const QuestionEditorView = (props) => {
     ));
 
     const renderColumnData = rowId => columns.map((column => (
-        <div key={column.id + rowId}>
+        <div key={column.id + rowId} className={styles['radio-input-wrapper']}>
             <RadioInput
                 rowId={rowId}
                 columnId={column.id}
@@ -82,30 +84,33 @@ const QuestionEditorView = (props) => {
     const renderRows = () => (
         rows.map(row => (
             <div key={row.id} className={styles['row']}>
-                {row.image &&
-                    <img width="40" height="40" src={row.image} />
-                }
-                {!row.image && (
-                    <FileUpload
-                        disabled={!!disabledSubmit}
-                        key={`file-upload-${row.id}`}
-                        type="rows"
+                <div className={styles['row-image-container']}>
+                    {row.image &&
+                        <img width="38" height="38" src={row.image} />
+                    }
+                    {!row.image && (
+                        <FileUpload
+                            disabled={!!disabledSubmit}
+                            key={`file-upload-${row.id}`}
+                            type="rows"
+                            id={row.id}
+                            onAddFile={onAddFile}
+                        />
+                    )}
+                </div>
+                <div className={styles['row-label']}>
+                    <LabelRemoveWrapper
                         id={row.id}
-                        onAddFile={onAddFile}
-                    />
-                )
-                }
-                <LabelRemoveWrapper
-                    id={row.id}
-                    onRemoveColumnOrRow={onRemoveColumnOrRow}
-                    type={LABEL_TYPES.rows}
-                    numberOfTypeLabels={rows.length}
-                >
-                    <TextInput
-                        value={row.title}
-                        onChange={event => onChangeLabel(event, row.id, LABEL_TYPES.rows)}
-                    />
-                </LabelRemoveWrapper>
+                        onRemoveColumnOrRow={onRemoveColumnOrRow}
+                        type={LABEL_TYPES.rows}
+                        numberOfTypeLabels={rows.length}
+                    >
+                        <TextInput
+                            value={row.title}
+                            onChange={event => onChangeLabel(event, row.id, LABEL_TYPES.rows)}
+                        />
+                    </LabelRemoveWrapper>
+                </div>
                 {renderColumnData(row.id)}
             </div>
         ))
@@ -113,42 +118,47 @@ const QuestionEditorView = (props) => {
 
     return (
         <div className={styles['question-editor-view']}>
-            <div>Question Editor View</div>
-            <form action="/upload">
-                <TextInput
-                    value={questionTitle}
-                    onChange={onChangeQuestionTitle}
-                />
+            <h2>Question Editor View</h2>
+            <form className={styles['form']} action="/upload">
+                <div className={styles['title']}>
+                    <TextInput
+                        value={questionTitle}
+                        onChange={onChangeQuestionTitle}
+                    />
+                </div>
                 <div className={styles['column-container']}>
                     {renderColumnLabels()}
                     {columns.length < MAX_NUMBER_OF_ROWS_OR_COLUMNS
                         && (
-                            <Button
-                                onClick={() => onAddColumnOrRow(LABEL_TYPES.columns)}
-                                label="+"
-                                square
-                            />
+                            <div className={styles['add-more-button']}>
+                                <Button
+                                    onClick={() => onAddColumnOrRow(LABEL_TYPES.columns)}
+                                    label="+"
+                                    square
+                                />
+                            </div>
                         )
                     }
                 </div>
                 <div>{renderRows()}</div>
                 {rows.length < MAX_NUMBER_OF_ROWS_OR_COLUMNS
                     && (
-                        < Button onClick={() => onAddColumnOrRow(LABEL_TYPES.rows)} label="+" square />
+                        <Button onClick={() => onAddColumnOrRow(LABEL_TYPES.rows)} label="+" square />
                     )
                 }
-                <Button
-                    type="reset"
-                    disabled={disabledSubmit}
-                    onClick={onResetForm}
-                    label="Reset form"
-                />
-                <Button
-                    type="submit"
-                    disabled={disabledSubmit}
-                    onClick={onSubmitForm}
-                    label="Save form"
-                />
+                <div className={styles['form-buttons']}>
+                    <Button
+                        type="reset"
+                        onClick={onResetForm}
+                        label="Reset form"
+                    />
+                    <Button
+                        type="submit"
+                        disabled={disabledSubmit}
+                        onClick={onSubmitForm}
+                        label="Save form"
+                    />
+                </div>
             </form>
         </div>
     );
